@@ -1,15 +1,14 @@
 ﻿using System.Text;
-using System;
 
 namespace Core
 {
     public static class PhonewordTranslator
     {
         /// <summary>
-        ///     Translate alphanumeric number to numeric
+        ///     Traduz um alfanumérico para um numérico
         /// </summary>
-        /// <param name="raw"></param>
-        /// <returns></returns>
+        /// <param name="raw">string</param>
+        /// <returns>string</returns>
         public static string ToNumber(string raw)
         {
             if (string.IsNullOrWhiteSpace(raw))
@@ -38,21 +37,21 @@ namespace Core
         }
 
         /// <summary>
-        /// 
+        ///     Verifica se a string contém um caractere específico
         /// </summary>
-        /// <param name="keyString"></param>
-        /// <param name="c"></param>
-        /// <returns></returns>
+        /// <param name="keyString">string</param>
+        /// <param name="c">caracter</param>
+        /// <returns>bool</returns>
         static bool Contains(this string keyString, char c)
         {
             return keyString.IndexOf(c) >= 0;
         }
 
         /// <summary>
-        /// 
+        ///     Traduz as letras dos botões do teclado para o numérico correspondente
         /// </summary>
-        /// <param name="c"></param>
-        /// <returns></returns>
+        /// <param name="c">caracter</param>
+        /// <returns>numérico correspondente ao caracter ou nulo</returns>
         static int? TranslateToNumber(char c)
         {
             if ("ABC".Contains(c))

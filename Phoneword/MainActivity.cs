@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using Android.App;
+﻿using Android.App;
 using Android.Content;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
 using Android.OS;
+using Android.Widget;
+using System;
+using System.Collections.Generic;
 
 namespace Phoneword
 {
@@ -21,7 +19,7 @@ namespace Phoneword
         static readonly List<string> phoneNumbers = new List<string>();
 
         /// <summary>
-        ///     set our view from the "main" layout resource
+        ///     Criação da Activity inicial do app
         /// </summary>
         /// <param name="bundle">bundle</param>
         protected override void OnCreate(Bundle bundle)
@@ -41,12 +39,12 @@ namespace Phoneword
         private void InicializarAtributosDaClasse()
         {
             ObterControlesDeInterfaceComUsuario();
-            callButton.Enabled = false;
+            VerificarBotaoCall();
             VerificarBotaoCallHistory();
         }
 
         /// <summary>
-        ///     Get our UI controls from the loaded layout
+        ///     Obter os controles de interface com o usuário a partir do layout carregado
         /// </summary>
         private void ObterControlesDeInterfaceComUsuario()
         {
@@ -59,6 +57,7 @@ namespace Phoneword
 
         /// <summary>
         ///     Ação ao clicar no botão Translate
+        ///     Traduz o telefone inserido pelo usuário e verifica o botão Call
         /// </summary>
         private void OnClickTranslateButton()
         {
@@ -70,7 +69,8 @@ namespace Phoneword
         }
 
         /// <summary>
-        ///     On "Call" button click, try to dial phone number.
+        ///     Ação ao clicar no botão Call
+        ///     Chamada ao método RealizarChamadaTelefonica()
         /// </summary>
         private void OnClickCallButton()
         {
@@ -82,6 +82,7 @@ namespace Phoneword
 
         /// <summary>
         ///     Ação ao clicar no botão Call History
+        ///     Inicializar a CallHistoryActivity
         /// </summary>
         private void OnClickCallHistoryButton()
         {
@@ -95,6 +96,7 @@ namespace Phoneword
 
         /// <summary>
         ///     Ação ao clicar no botão Reset
+        ///     Limpar os campos e verificar o botão Call
         /// </summary>
         private void OnClickResetButton()
         {
@@ -107,9 +109,9 @@ namespace Phoneword
         }
 
         /// <summary>
-        ///     Try to dial phone number.
-        ///     Create intent to dial phone.
-        ///     Show the alert dialog to the user and wait for response.
+        ///     Tenta realizar uma ligação telefônica
+        ///     Cria uma Intenta para realizar a ligação
+        ///     Exibe uma tela de alerta para o usuário e espera uma resposta
         /// </summary>
         /// <param name="phoneNumber">Número do telefone</param>
         protected void RealizarChamadaTelefonica(string phoneNumber)
@@ -129,7 +131,7 @@ namespace Phoneword
         }
 
         /// <summary>
-        ///     Adiciona Telefone no histórico de ligações.
+        ///     Adiciona um telefone ao histórico de ligações
         /// </summary>
         /// <param name="phoneNumber">Número do telefone</param>
         private void AdicionarTelefoneNoHistorico(string phoneNumber)
@@ -139,7 +141,7 @@ namespace Phoneword
         }
 
         /// <summary>
-        ///     Habilita o botão Call History caso existam telefones no histórico.
+        ///     Habilita o botão Call History caso existam telefones no histórico de ligações
         /// </summary>
         private void VerificarBotaoCallHistory()
         {
@@ -150,8 +152,8 @@ namespace Phoneword
         }
 
         /// <summary>
-        ///     Habilita o botão Call caso tenha sido fornecido um telefone.
-        ///     Atualiza o texto do botão Call.
+        ///     Habilita o botão Call caso um telefone fornecido pelo usuário tenha sido traduzido
+        ///     Atualiza o texto do botão Call
         /// </summary>
         private void VerificarBotaoCall()
         {
