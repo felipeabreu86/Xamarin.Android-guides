@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Android.App;
 using Android.Content;
 using Android.Runtime;
@@ -14,7 +15,9 @@ namespace Phoneword
         EditText phoneNumberText = null;
         Button translateButton = null;
         Button callButton = null;
+        Button callHistoryButton = null;
         string translatedNumber = string.Empty;
+        static readonly List<string> phoneNumbers = new List<string>();
 
         /// <summary>
         ///     set our view from the "main" layout resource
@@ -24,19 +27,21 @@ namespace Phoneword
         {
             base.OnCreate(bundle);
             SetContentView(Resource.Layout.Main);
-            InstanciarAtributosDeClasse();
+            InicializarAtributosDaClasse();
             OnClickTranslateButton();
             OnClickCallButton();
+            OnClickCallHistoryButton();
         }
 
         /// <summary>
-        ///     Instanciar os atributos da MainActivity
+        ///     Inicializar os atributos da classe MainActivity
         /// </summary>
-        private void InstanciarAtributosDeClasse()
+        private void InicializarAtributosDaClasse()
         {
             ObterControlesDeInterfaceComUsuario();
             callButton.Enabled = false;
             translatedNumber = Core.PhonewordTranslator.ToNumber(phoneNumberText.Text);
+            VerificarBotaoCallHistory();
         }
 
         /// <summary>
@@ -47,6 +52,7 @@ namespace Phoneword
             EditText phoneNumberText = FindViewById<EditText>(Resource.Id.PhoneNumberText);
             Button translateButton = FindViewById<Button>(Resource.Id.TranslateButton);
             Button callButton = FindViewById<Button>(Resource.Id.CallButton);
+            Button callHistoryButton = FindViewById<Button>(Resource.Id.CallHistoryButton);
         }
 
         /// <summary>
@@ -76,7 +82,20 @@ namespace Phoneword
         {
             callButton.Click += (object sender, EventArgs e) =>
             {
-                RealizarChamadaTelefonica();
+                RealizarChamadaTelefonica(translatedNumber);
+            };
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void OnClickCallHistoryButton()
+        {
+            callHistoryButton.Click += (object sender, EventArgs e) =>
+            {
+                var intent = new Intent(this, typeof(CallHistoryActivity));
+                intent.PutStringArrayListExtra("phone_numbers", phoneNumbers);
+                StartActivity(intent);
             };
         }
 
@@ -85,19 +104,42 @@ namespace Phoneword
         ///     Create intent to dial phone.
         ///     Show the alert dialog to the user and wait for response.
         /// </summary>
-        protected void RealizarChamadaTelefonica()
+        /// <param name="phoneNumber">Número do telefone</param>
+        protected void RealizarChamadaTelefonica(string phoneNumber)
         {
             var callDialog = new AlertDialog.Builder(this);
-            callDialog.SetMessage("Call " + translatedNumber + "?");
+            callDialog.SetMessage("Call " + phoneNumber + "?");
             callDialog.SetNeutralButton("Call", delegate
             {
+                AdicionarTelefoneNoHistorico(phoneNumber);
+                VerificarBotaoCallHistory();
                 var callIntent = new Intent(Intent.ActionCall);
-                callIntent.SetData(Android.Net.Uri.Parse("tel:" + translatedNumber));
+                callIntent.SetData(Android.Net.Uri.Parse("tel:" + phoneNumber));
                 StartActivity(callIntent);
             });
             callDialog.SetNegativeButton("Cancel", delegate { });
             callDialog.Show();
         }
+
+        /// <summary>
+        ///     Adiciona Telefone no histórico de ligações.
+        /// </summary>
+        /// <param name="phoneNumber">Número do telefone</param>
+        private void AdicionarTelefoneNoHistorico(string phoneNumber)
+        {
+            if(!string.IsNullOrWhiteSpace(phoneNumber))
+                phoneNumbers.Add(phoneNumber);            
+        }
+
+        /// <summary>
+        ///     Habilita o botão Call History caso existam telefones no histórico.
+        /// </summary>
+        private void VerificarBotaoCallHistory()
+        {
+            if (phoneNumbers.Count == 0)
+                callHistoryButton.Enabled = false;
+            else
+                callHistoryButton.Enabled = true;
+        }
     }
 }
-
