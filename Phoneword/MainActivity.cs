@@ -16,6 +16,7 @@ namespace Phoneword
         Button translateButton = null;
         Button callButton = null;
         Button callHistoryButton = null;
+        Button resetButton = null;
         string translatedNumber = string.Empty;
         static readonly List<string> phoneNumbers = new List<string>();
 
@@ -31,6 +32,7 @@ namespace Phoneword
             OnClickTranslateButton();
             OnClickCallButton();
             OnClickCallHistoryButton();
+            OnClickResetButton();
         }
 
         /// <summary>
@@ -40,7 +42,6 @@ namespace Phoneword
         {
             ObterControlesDeInterfaceComUsuario();
             callButton.Enabled = false;
-            translatedNumber = Core.PhonewordTranslator.ToNumber(phoneNumberText.Text);
             VerificarBotaoCallHistory();
         }
 
@@ -49,10 +50,11 @@ namespace Phoneword
         /// </summary>
         private void ObterControlesDeInterfaceComUsuario()
         {
-            EditText phoneNumberText = FindViewById<EditText>(Resource.Id.PhoneNumberText);
-            Button translateButton = FindViewById<Button>(Resource.Id.TranslateButton);
-            Button callButton = FindViewById<Button>(Resource.Id.CallButton);
-            Button callHistoryButton = FindViewById<Button>(Resource.Id.CallHistoryButton);
+            phoneNumberText = FindViewById<EditText>(Resource.Id.PhoneNumberText);
+            translateButton = FindViewById<Button>(Resource.Id.TranslateButton);
+            callButton = FindViewById<Button>(Resource.Id.CallButton);
+            callHistoryButton = FindViewById<Button>(Resource.Id.CallHistoryButton);
+            resetButton = FindViewById<Button>(Resource.Id.ResetButton);
         }
 
         /// <summary>
@@ -62,6 +64,7 @@ namespace Phoneword
         {
             translateButton.Click += (object sender, EventArgs e) =>
             {
+                translatedNumber = Core.PhonewordTranslator.ToNumber(phoneNumberText.Text);
                 if (String.IsNullOrWhiteSpace(translatedNumber))
                 {
                     callButton.Text = "Call";
@@ -87,7 +90,7 @@ namespace Phoneword
         }
 
         /// <summary>
-        /// 
+        ///     Ação ao clicar no botão Call History
         /// </summary>
         private void OnClickCallHistoryButton()
         {
@@ -96,6 +99,19 @@ namespace Phoneword
                 var intent = new Intent(this, typeof(CallHistoryActivity));
                 intent.PutStringArrayListExtra("phone_numbers", phoneNumbers);
                 StartActivity(intent);
+            };
+        }
+
+        /// <summary>
+        ///     Ação ao clicar no botão Reset
+        /// </summary>
+        private void OnClickResetButton()
+        {
+            resetButton.Click += (object sender, EventArgs e) =>
+            {
+                phoneNumberText.Text = "";
+                callButton.Text = "Call";
+                callButton.Enabled = false;
             };
         }
 

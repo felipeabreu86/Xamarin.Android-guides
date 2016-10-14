@@ -69,6 +69,9 @@ namespace Phoneword
 			// aapt resource value: 0x7f050001
 			public const int PhoneNumberText = 2131034113;
 			
+			// aapt resource value: 0x7f050005
+			public const int ResetButton = 2131034117;
+			
 			// aapt resource value: 0x7f050002
 			public const int TranslateButton = 2131034114;
 			
