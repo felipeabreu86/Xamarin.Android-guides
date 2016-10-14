@@ -65,16 +65,7 @@ namespace Phoneword
             translateButton.Click += (object sender, EventArgs e) =>
             {
                 translatedNumber = Core.PhonewordTranslator.ToNumber(phoneNumberText.Text);
-                if (String.IsNullOrWhiteSpace(translatedNumber))
-                {
-                    callButton.Text = "Call";
-                    callButton.Enabled = false;
-                }
-                else
-                {
-                    callButton.Text = "Call " + translatedNumber;
-                    callButton.Enabled = true;
-                }
+                VerificarBotaoCall();
             };
         }
 
@@ -109,9 +100,9 @@ namespace Phoneword
         {
             resetButton.Click += (object sender, EventArgs e) =>
             {
-                phoneNumberText.Text = "";
-                callButton.Text = "Call";
-                callButton.Enabled = false;
+                phoneNumberText.Text = string.Empty;
+                translatedNumber = string.Empty;
+                VerificarBotaoCall();
             };
         }
 
@@ -156,6 +147,24 @@ namespace Phoneword
                 callHistoryButton.Enabled = false;
             else
                 callHistoryButton.Enabled = true;
+        }
+
+        /// <summary>
+        ///     Habilita o botão Call caso tenha sido fornecido um telefone.
+        ///     Atualiza o texto do botão Call.
+        /// </summary>
+        private void VerificarBotaoCall()
+        {
+            if (String.IsNullOrWhiteSpace(translatedNumber))
+            {
+                callButton.Text = "Call";
+                callButton.Enabled = false;
+            }
+            else
+            {
+                callButton.Text = "Call " + translatedNumber;
+                callButton.Enabled = true;
+            }
         }
     }
 }
